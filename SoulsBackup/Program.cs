@@ -21,17 +21,17 @@ while (true)
         continue;
     }
     
-    GetMenu().FirstOrDefault(x => x.Command == command)?.Action(argument);
+    menu.FirstOrDefault(x => x.Command == command || x.Shortcut == command)?.Action(argument);
     ConsoleHelpers.PrintLine();
 }
 
 static HashSet<MenuItem> GetMenu() => [
-    new() { Command = "config", Action = _ => Config(), Description = "Configure the backup", Shortcut = "c" },
-    new() { Command = "list", Action = _ => List(), Description = "List available backups", Shortcut = "l"},
-    new() { Command = "backup", Action = Backup, Description = "Backup to a snapshot", Shortcut = "b" },
-    new() { Command = "restore", Action = Restore, Description = "Restore from the snapshot", Shortcut = "r" },
-    new() { Command = "help", Action = (c) => PrintMenu(GetMenu(),c), Description = "Print this", Shortcut = "?"},
-    new() { Command = "exit", Action = _ => Environment.Exit(0), Description = "Exit the program", Shortcut = "e" },
+    new() { Id = 1, Command = "config", Action = _ => Config(), Description = "Configure the backup", Shortcut = "c" },
+    new() { Id = 2,  Command = "list", Action = _ => List(), Description = "List available backups", Shortcut = "l"},
+    new() { Id = 3,  Command = "backup", Action = Backup, Description = "Backup to a snapshot", Shortcut = "b" },
+    new() { Id = 4,  Command = "restore", Action = Restore, Description = "Restore from the snapshot", Shortcut = "r" },
+    new() { Id = 5,  Command = "help", Action = (c) => PrintMenu(GetMenu(),c), Description = "Print this", Shortcut = "?"},
+    new() { Id = 6,  Command = "exit", Action = _ => Environment.Exit(0), Description = "Exit the program", Shortcut = "e" },
 ];
 
 static void  PrintMenu(HashSet<MenuItem> menu,string command = "")
@@ -64,7 +64,7 @@ public record MenuItem
         Shortcut = shortcut;
     }
 
-    public int Id { get; } = _count++;
+    public int Id { get; init; } = _count++;
 
     public required string Command { get; init; }
     public required Action<string> Action { get; init; }
